@@ -10,22 +10,19 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ListActivity : AppCompatActivity(){
-
-    private fun setAdapter(photo_list: List<Photo>) {
-        val mAdapter = PhotoAdapter({ final_photo ->
-            val intent = Intent(this, PhotoDetailActivity::class.java)
-            intent.putExtra("throw", final_photo)
-            startActivity(intent)
-        }, photo_list)
-        recycler_view.adapter = mAdapter
-        recycler_view.layoutManager = GridLayoutManager(this, 2)
-        recycler_view.setHasFixedSize(false)
-    }
+class ListActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.photo_list)
+        val mAdapter = PhotoAdapter { final_photo ->
+            val intent = Intent(this, PhotoDetailActivity::class.java)
+            intent.putExtra("throw", final_photo)
+            startActivity(intent)
+        }
+        recycler_view.adapter = mAdapter
+        recycler_view.layoutManager = GridLayoutManager(this, 2)
+        recycler_view.setHasFixedSize(false)
 
         recycler_view.layoutManager = GridLayoutManager(this, 2)
 
@@ -37,7 +34,7 @@ class ListActivity : AppCompatActivity(){
             override fun onResponse(call: Call<List<Photo>>?, response: Response<List<Photo>>) {
                 if (response.isSuccessful) {
                     response.body()?.let {
-                        setAdapter(it)
+                        mAdapter.list = it
                     }
                 }
             }

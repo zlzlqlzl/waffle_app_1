@@ -8,12 +8,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_photo.view.*
 
-class PhotoAdapter(private val onItemClick: (Photo) -> Unit, private val list: List<Photo>) :
+class PhotoAdapter(private val onItemClick: (Photo) -> Unit) :
     RecyclerView.Adapter<PhotoAdapter.PhotoViewholder>() {
-
+    var list: List<Photo> = emptyList()
+    set(value) {
+        field = value
+        notifyDataSetChanged()
+    }
     //뷰홀더 객체 생성
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewholder {
-        return PhotoViewholder(LayoutInflater.from(parent.context).inflate(R.layout.item_photo, parent, false))
+        return PhotoViewholder(LayoutInflater.from(parent.context).inflate(R.layout.item_photo, parent, false)).also { vh ->
+            vh.adapterPosition.takeIf { it != RecyclerView.NO_POSITION }?.let { position ->
+
+            }
+
+        }
     }
 
     //전체 데이터 개수 리턴

@@ -10,10 +10,11 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import android.widget.Toast
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
-    lateinit var user_list: List<User>
+    lateinit var userlist: List<User>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,19 +29,16 @@ class MainActivity : AppCompatActivity() {
                 override fun onResponse(call: Call<List<User>>, response: Response<List<User>>) {
                     if (response.isSuccessful) {
                         response.body()?.let {
-                            user_list = it
+                            userlist = it
                         }
                     }
                 }
             })
 
-
-        val SubmitButton = findViewById<Button>(R.id.SubmitButton)
-
-        SubmitButton.setOnClickListener {
+        submit_button.setOnClickListener {
             val EmailText = findViewById<TextView>(R.id.EmailText)
             val NameText = findViewById<TextView>(R.id.NameText)
-            user_list.forEach {
+            userlist.forEach {
                 if (it.username == NameText.text.toString() && it.email == EmailText.text.toString()) {
                     startActivity(Intent(this, ListActivity::class.java))
                     return@setOnClickListener

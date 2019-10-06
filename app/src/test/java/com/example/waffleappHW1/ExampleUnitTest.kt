@@ -1,4 +1,4 @@
-package com.example.newproject0922
+package com.example.waffleappHW1
 
 import org.junit.Test
 

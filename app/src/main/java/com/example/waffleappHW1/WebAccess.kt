@@ -6,8 +6,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 object WebAccess {
-    private val photo_service: PhotoService
-    private val user_service: UserService
+    private val photoService: PhotoService
+    private val userService: UserService
 
     init {
         val client = OkHttpClient.Builder().build()
@@ -16,10 +16,10 @@ object WebAccess {
             .client(client)
             .addConverterFactory(MoshiConverterFactory.create()) // json->java parsing
             .build()
-        photo_service = retrofit.create(PhotoService::class.java)
-        user_service = retrofit.create(UserService::class.java)
+        photoService = retrofit.create(PhotoService::class.java)
+        userService = retrofit.create(UserService::class.java)
     }
 
-    fun getPhoto(): Call<List<Photo>> = photo_service.getPhoto()
-    fun getUsers(): Call<List<User>> = user_service.getUsers()
+    fun getPhoto(): Call<List<Photo>> = photoService.getPhoto()
+    fun getUsers(): Call<List<User>> = userService.getUsers()
 }
