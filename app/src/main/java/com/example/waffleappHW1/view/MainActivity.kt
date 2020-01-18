@@ -10,6 +10,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.waffleappHW1.R
 import com.example.waffleappHW1.data.User
@@ -24,54 +25,27 @@ import javax.inject.Inject
 
 
 class MainActivity : DaggerAppCompatActivity() {
-    lateinit var userlist: List<User>
-    @Inject
-    lateinit var userService: UserService
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    private val compositeDisposable = CompositeDisposable()
+    private val viewModel by viewModels<MainViewModel> { viewModelFactory }
 
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this,R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
-
-//        userService.getUsers().enqueue(
-//            object : Callback<List<User>> {
-//                override fun onFailure(call: Call<List<User>>, t: Throwable) {
-//                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//                }
-//
-//                override fun onResponse(call: Call<List<User>>, response: Response<List<User>>) {
-//                    if (response.isSuccessful) {
-//                        response.body()?.let {
-//                            userlist = it
-//                        }
-//                    }
-//                }
-//            })
-        userService.getUsers()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                userlist = it
-            },{})
-            .also { compositeDisposable.add(it) }
+        viewModel.getUsersInfo()
 
         submit_button.setOnClickListener {
             val EmailText = findViewById<TextView>(R.id.EmailText)
             val NameText = findViewById<TextView>(R.id.NameText)
-            userlist.forEach {
-                if (it.username == NameText.text.toString() && it.email == EmailText.text.toString()) {
-                    startActivity(Intent(this, ListActivity::class.java))
-                    return@setOnClickListener
-                }
+            if (viewModel.checkUserInfo(NameText.text.toString(), EmailText.text.toString())) {
+                startActivity(Intent(this, ListActivity::class.java))
             }
-            val toast =
-                Toast.makeText(this, "no user data", Toast.LENGTH_SHORT)
-            toast.show()
+            else {
+                Toast.makeText(this, "no user data", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }
